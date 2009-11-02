@@ -34,11 +34,25 @@ sub print_help() {
 	exit 0;
 }
 
+sub print_hostuuid() {
+	open (F, "< $file") or die "$program\: Could not open file: $file\: $!\n";
+	while (<F>) {
+		if (/([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
+			print "$1\n";
+			close (F);
+			exit 0;
+		}
+	}
+	print STDERR "$program\: Could not find UUID in $file\n";
+	exit 100;
+}
+
 sub main() {
 	print_version() if $version;
 	print_help()    if $help;
 
 	print "file: $file\n";
+	print_hostuuid();
 }
 
 main();
