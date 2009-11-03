@@ -17,7 +17,7 @@ my $print_version;
 my $print_help;
 my $create_uuid = 0;
 
-
+Getopt::Long::Configure ("bundling");
 GetOptions (
             'file|f=s'  => \$file,
             'help|h|?'  => \$print_help,
