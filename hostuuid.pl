@@ -1,12 +1,27 @@
 #!/usr/bin/perl
-# GPLv3
-# Richard Hartmann
+
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Written by Richard Hartmann in 2009, feel free to email
+# richih.mailinglist@gmail.com with questions.
+
 
 use strict;
 use warnings;
 
 use UUID::Tiny;
-use Getopt::Long;
+use Getopt::Long qw(:config no_ignore_case bundling);
 use File::Basename;
 
 my $version = '1.0';
@@ -17,14 +32,11 @@ my $print_version;
 my $print_help;
 my $create_uuid = 0;
 
-Getopt::Long::Configure ("bundling");
 GetOptions (
             'file|f=s'  => \$file,
             'help|h|?'  => \$print_help,
             'version|v' => \$print_version,
             'create|c'  => \$create_uuid,
-#           '' => \$,
-#            '' => \$,
            );
 
 sub print_version() {
@@ -86,10 +98,11 @@ sub main() {
 	my $uuid = find_hostuuid();
 	if ($uuid) {
 		print "$uuid\n";
+		exit 0;
 	} else {
 		print STDERR "$program: Could not find UUID in '$file'\n";
 		exit 100;
-}	
+	}
 }
 
 main();
