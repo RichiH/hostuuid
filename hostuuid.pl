@@ -37,7 +37,7 @@ GetOptions (
             'help|h|?'  => \$print_help,
             'version|v' => \$print_version,
             'create|c'  => \$create_uuid,
-           );
+           ) or exit 255;
 
 sub print_version() {
 	print <<VERSION;
