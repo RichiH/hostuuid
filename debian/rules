@@ -9,26 +9,26 @@
 build: build-stamp
 
 build-stamp:
-        dh_testdir
-        touch build-stamp
+	dh_testdir
+	touch build-stamp
 
 clean:
-        dh_testdir
-        dh_testroot
-        rm -f build-stamp
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
 
-        dh_clean 
-        rm -rf $(CURDIR)/debian/hostuuid/
+	dh_clean 
+	rm -rf $(CURDIR)/debian/hostuuid/
 
 install: build
-        dh_testdir
-        dh_testroot
-        dh_clean -k
-        dh_installdirs
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
 
-        # Add here commands to install the package into debian/hostuuid.
-#        cp ./hostuuid            debian/hostuuid/usr/bin/
-        install -m 755  hostuuid debian/hostuuid/usr/bin/hostuuid
+	# Add here commands to install the package into debian/hostuuid.
+#	cp ./hostuuid            debian/hostuuid/usr/bin/
+	install -m 755  hostuuid debian/hostuuid/usr/bin/hostuuid
 
 # Build architecture-dependent files here.
 binary-arch: build install
@@ -36,20 +36,20 @@ binary-arch: build install
 
 # Build architecture-independent files here.
 binary-indep: build install
-        dh_testdir
-        dh_testroot
-        dh_installchangelogs
-        dh_installdocs
-        dh_installman
-        dh_link
-        dh_strip
-        dh_compress
-        dh_fixperms
-        dh_installdeb
-        dh_shlibdeps
-        dh_gencontrol
-        dh_md5sums
-        dh_builddeb
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install
