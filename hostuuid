@@ -14,7 +14,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Written by Richard Hartmann in 2009, feel free to email
-# richih.mailinglist@gmail.com with questions.
+# richih dot mailinglist -at- gmail dot com with questions.
 
 
 use strict;
