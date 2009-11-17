@@ -3,7 +3,7 @@ Section: admin
 Priority: optional
 Maintainer: Richard Hartmann <richih.mailinglist@gmail.com>
 Build-Depends: debhelper (>= 4.0.0)
-Standards-Version: 3.8.0
+Standards-Version: 3.8.3
 
 Package: hostuuid
 Architecture: all
@@ -11,5 +11,5 @@ Depends: perl, libuuid-tiny-perl
 Description: A program to assign & print a UUID per host
  Create, manage and display a UUID which is stored into
  /etc/hostuuid to make the distinction of hosts easier and
- persistant on the code level.
+ persistent on the code level.
 
