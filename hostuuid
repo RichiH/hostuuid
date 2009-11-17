@@ -24,7 +24,7 @@ use UUID::Tiny;
 use Getopt::Long qw(:config no_ignore_case bundling);
 use File::Basename;
 
-my $version = '1.0';
+my $version = '1.1';
 my $program = basename($0);
 
 my $file = '/etc/hostuuid';
@@ -37,7 +37,7 @@ GetOptions (
             'help|h|?'  => \$print_help,
             'version|v' => \$print_version,
             'create|c'  => \$create_uuid,
-           ) or exit 255;
+           ) or print_help(255);
 
 sub print_version() {
 	print <<VERSION;
@@ -49,7 +49,8 @@ VERSION
 	exit 0;
 }
 
-sub print_help() {
+sub print_help {
+	my ($exit_code) = @_;
 	print <<HELP;
 Help for $program:
 
@@ -58,7 +59,7 @@ Help for $program:
   -f, --file     : file to read from/write to. Defaults to /etc/hostuuid
   -c, --create   : create & save UUID
 HELP
-	exit 0;
+	exit $exit_code;
 }
 
 sub create_uuid() {
@@ -89,10 +90,9 @@ sub find_hostuuid() {
 }
 
 sub main() {
-	print "\n\nIf anyone knows how to die() when there is no value for -f, tell me!\n\n";
 	chomp $file;
 	print_version() if $print_version;
-	print_help()    if $print_help;
+	print_help(0)   if $print_help;
 	create_uuid()   if $create_uuid;
 
 	my $uuid = find_hostuuid();
