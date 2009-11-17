@@ -24,7 +24,7 @@ use UUID::Tiny;
 use Getopt::Long qw(:config no_ignore_case bundling);
 use File::Basename;
 
-my $version = '1.0';
+my $version = '1.1';
 my $program = basename($0);
 
 my $file = '/etc/hostuuid';
