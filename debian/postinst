@@ -1,0 +1,31 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+uuid_file='/etc/hostuuid'
+create_uuid=''
+
+test_uuid_file() {
+	echo $RET | /usr/bin/hostuuid --verify
+}
+
+if test_uuid_file; then
+	exit 0
+else
+	db_input medium hostuuid/enter_uuid || true
+	db_go
+	db_get hostuuid/enter_uuid
+	# if $RET is empty, generate a UUID
+	if [ -z "$RET" ]; then
+		/usr/bin/hostuuid --create --quiet
+	else
+		if test_uuid_file; then
+			exit 0
+		else
+			db_fset hostuuid/faulty_uuid seen false
+			db_input critical hostuuid/faulty_uuid
+		fi
+	fi
+fi
+
+exit 0

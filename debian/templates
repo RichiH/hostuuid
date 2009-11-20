@@ -1,0 +1,14 @@
+Template: hostuuid/enter_uuid
+Type: string
+Description: Enter UUID
+ Please enter a valid UUID. Leave blank to auto-generate one.
+Description-de.UTF-8: UUID eingeben
+ Bitte eine gültige UUID eingeben. Leer lassen um automatisch eine zu generieren.
+
+Template: hostuuid/faulty_uuid
+Type: error
+Description: Invalid UUID
+ The UUID you entered is wrong. Please run dpkg-reconfigure hostuuid!
+Description-de.UTF-8: Falsche UUID
+ Die eingegebene UUID ist ungueltig. Bitte nachtraeglich dpkg-reconfigure hostuuid ausführen!
+
