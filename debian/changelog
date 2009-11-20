@@ -1,3 +1,10 @@
+hostuuid (1.2) unstable; urgency=low
+
+  * Upgraded to 1.2
+  * Added postinst script to generate /etc/hostuuid
+
+ -- Richard Hartmann <richih.mailinglist@gmail.com>  Fri, 20 Nov 2009 02:32:25 +0100
+
 hostuuid (1.1) unstable; urgency=low
 
   * Removed debug output.
