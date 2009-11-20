@@ -14,7 +14,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Written by Richard Hartmann in 2009, feel free to email
-# richih.mailinglist@gmail.com with questions.
+# richih dot mailinglist -at- gmail dot com with questions.
 
 
 use strict;
@@ -24,52 +24,68 @@ use UUID::Tiny;
 use Getopt::Long qw(:config no_ignore_case bundling);
 use File::Basename;
 
-my $version = '1.1';
+my $version = '1.2';
 my $program = basename($0);
 
 my $file = '/etc/hostuuid';
 my $print_version;
 my $print_help;
 my $create_uuid = 0;
+my $quiet;
+my $verify_uuid;
+
 
 GetOptions (
             'file|f=s'  => \$file,
             'help|h|?'  => \$print_help,
             'version|v' => \$print_version,
             'create|c'  => \$create_uuid,
-           ) or exit 255;
+            'quiet|q'   => \$quiet,
+            'verify'    => \$verify_uuid,
+           ) or print_help(255);
 
 sub print_version() {
-	print <<VERSION;
+	unless ($quiet) {
+		print <<VERSION;
 $program: version $version
 
 This program is released under GPLv3
 Written by Richard Hartmann for Debian and Grml
 VERSION
+	}
 	exit 0;
 }
 
-sub print_help() {
-	print <<HELP;
+sub print_help {
+	my ($exit_code) = @_;
+	unless ($quiet) {
+		print <<HELP;
 Help for $program:
 
   -h, -?, --help : print this help
   -v, --version  : print version
   -f, --file     : file to read from/write to. Defaults to /etc/hostuuid
   -c, --create   : create & save UUID
+  -q, --quiet    : Don't print anything
+  --verify       : verify if there is a valid UUID in file
+                   Does not print, only exits with zero/non-zero return code
 HELP
-	exit 0;
+	}	
+	exit $exit_code;
 }
 
 sub create_uuid() {
 	my $uuid = find_hostuuid();
 	if ($uuid) {
-		print STDERR "$program: Found UUID '$uuid' in '$file'. Aborting!\n";
+		print STDERR "$program: Found UUID '$uuid' in '$file'. Aborting!\n" unless $quiet;
 		exit 101;
 	} else {
-		open (F, ">", "$file") or die "$program: Could not open file: '$file'\: $!\n";
+		open (F, ">", "$file") or do {
+			die "$program: Could not open file: '$file'\: $!\n" unless $quiet;
+			exit 2;
+		};
 		$uuid = create_UUID_as_string(UUID_V4);
-		print "$program\: Stored UUID '$uuid' in file '$file'\n";
+		print "$program\: Stored UUID '$uuid' in file '$file'\n" unless $quiet;
 		print F "$uuid\n";
 		close (F);
 		exit 0;
@@ -79,9 +95,12 @@ sub create_uuid() {
 sub find_hostuuid() {
 #	if ($create_uuid) {return 0 unless -e $file;}
 	return 0 unless ((-e $file && $create_uuid) || !$create_uuid);
-	open (F, "<", "$file") or die "$program: Could not open file: '$file'\: $!\n";
+	open (F, "<", "$file") or do {
+		die "$program: Could not open file: '$file'\: $!\n" unless $verify_uuid || $quiet;
+		exit 2;
+	};
 	while (<F>) {
-		if (/([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
+		if (/^([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
 			close (F);
 			return $1;
 		}
@@ -89,18 +108,26 @@ sub find_hostuuid() {
 }
 
 sub main() {
-	print "\n\nIf anyone knows how to die() when there is no value for -f, tell me!\n\n";
+	unless (-t STDIN) {
+		if (<STDIN> =~ /^([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
+			print "$1 is a valid UUID\n" unless $verify_uuid || $quiet;
+			exit;
+		} else {
+			print "NOT a valid UUID\n" unless $verify_uuid || $quiet;
+			exit 105;
+		}
+	}
 	chomp $file;
 	print_version() if $print_version;
-	print_help()    if $print_help;
+	print_help(0)   if $print_help;
 	create_uuid()   if $create_uuid;
 
 	my $uuid = find_hostuuid();
 	if ($uuid) {
-		print "$uuid\n";
+		print "$uuid\n" unless $verify_uuid || $quiet;
 		exit 0;
 	} else {
-		print STDERR "$program: Could not find UUID in '$file'\n";
+		print STDERR "$program: Could not find UUID in '$file'\n" unless $verify_uuid || $quiet;
 		exit 100;
 	}
 }
