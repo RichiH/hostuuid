@@ -38,7 +38,6 @@ my $print_version;
 my $print_help;
 my $create_uuid = 0;
 my $quiet;
-my $verify_uuid;
 
 =head1 SYNOPSIS
 
@@ -70,14 +69,6 @@ Create a new UUID.
 =item B<-q|--quiet>
 
 Don't print anything.
-
-B<hostuuid> will still exit with proper return codes for you to script with.
-
-=item B<-v|--verify>
-
-Don't print anything related to verification.
-Use this if you don't anything to be printed on STDOUT.
-
 B<hostuuid> will still exit with proper return codes for you to script with.
 
 =item B<-h|-?|--help>
@@ -115,7 +106,6 @@ GetOptions (
             'version'   => \$print_version,
             'create|c'  => \$create_uuid,
             'quiet|q'   => \$quiet,
-            'verify|v'  => \$verify_uuid,
            ) or print_help(255);
 
 sub print_version() {
@@ -140,8 +130,6 @@ Help for $program:
   --force        : force creation of new UUID
   -c, --create   : create & save UUID
   -q, --quiet    : Don't print anything
-  -v, --verify   : verify if there is a valid UUID in file
-                   Does not print, only exits with zero/non-zero return code
   -h, -?, --help : print this help
   --version      : print version
 HELP
@@ -171,7 +159,7 @@ sub find_hostuuid() {
 #	if ($create_uuid) {return 0 unless -e $file;}
 	return 0 unless ((-e $file && $create_uuid) || !$create_uuid);
 	open (F, "<", "$file") or do {
-		die "$program: Could not open file: '$file'\: $!\n" unless $verify_uuid || $quiet;
+		die "$program: Could not open file: '$file'\: $!\n" unless $quiet;
 		exit 2;
 	};
 	while (<F>) {
@@ -185,10 +173,10 @@ sub find_hostuuid() {
 sub main() {
 	unless (-t STDIN) {
 		if (<STDIN> =~ /^([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
-			print "$1 is a valid UUID\n" unless $verify_uuid || $quiet;
+			print "$1 is a valid UUID\n" unless $quiet;
 			exit;
 		} else {
-			print "NOT a valid UUID\n" unless $verify_uuid || $quiet;
+			print "NOT a valid UUID\n" unless $quiet;
 			exit 105;
 		}
 	}
@@ -199,10 +187,10 @@ sub main() {
 
 	my $uuid = find_hostuuid();
 	if ($uuid) {
-		print "$uuid\n" unless $verify_uuid || $quiet;
+		print "$uuid\n" unless $quiet;
 		exit 0;
 	} else {
-		print STDERR "$program: Could not find UUID in '$file'\n" unless $verify_uuid || $quiet;
+		print STDERR "$program: Could not find UUID in '$file'\n" unless $quiet;
 		exit 100;
 	}
 }
