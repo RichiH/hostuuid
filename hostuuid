@@ -48,7 +48,7 @@ echo 4f1cc27c-6c7b-4419-9db6-5b2f6a600b37 | B<hostuuid>
 =head1 DESCRIPTION
 
 B<hostuuid> creates, displays and verifies the contents of /etc/hostuuid or any other file.
-It will also check anything on STDIN for being a UUID.
+It will also read anything on STDIN and verify if it's a UUID.
 
 =head1 OPTIONS
 
