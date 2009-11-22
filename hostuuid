@@ -163,7 +163,7 @@ sub find_hostuuid() {
 		exit 2;
 	};
 	while (<F>) {
-		if (/^([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
+		if (/^([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})/i) {
 			close (F);
 			return $1;
 		}
@@ -172,7 +172,7 @@ sub find_hostuuid() {
 
 sub main() {
 	unless (-t STDIN) {
-		if (<STDIN> =~ /^([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
+		if (<STDIN> =~ /^([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})/i) {
 			print "$1 is a valid UUID\n" unless $quiet;
 			exit;
 		} else {
