@@ -16,6 +16,11 @@
 # Written by Richard Hartmann in 2009, feel free to email
 # richih dot mailinglist -at- gmail dot com with questions.
 
+=head1 NAME
+
+B<hostuuid> - program to create, display, check /etc/hostuuid
+
+=cut
 
 use strict;
 use warnings;
@@ -28,20 +33,79 @@ my $version = '1.2';
 my $program = basename($0);
 
 my $file = '/etc/hostuuid';
+my $force;
 my $print_version;
 my $print_help;
 my $create_uuid = 0;
 my $quiet;
-my $verify_uuid;
 
+=head1 SYNOPSIS
+
+B<hostuuid> [-f I<file>]
+B<hostuuid> -c [--force] [-f I<file>]
+echo 4f1cc27c-6c7b-4419-9db6-5b2f6a600b37 | B<hostuuid>
+
+=head1 DESCRIPTION
+
+B<hostuuid> creates, displays and verifies the contents of /etc/hostuuid or any other file.
+It will also check anything on STDIN for being a UUID.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-f|--file> I<filename>
+
+The I<filename> B<hostuuid> will read from/write to.
+
+=item B<--force>
+
+Force creation of new UUID.
+
+=item B<-c|--create>
+
+Create a new UUID.
+
+=item B<-q|--quiet>
+
+Don't print anything.
+B<hostuuid> will still exit with proper return codes for you to script with.
+
+=item B<-h|-?|--help>
+
+Print help.
+
+=item B<--version>
+
+Print version information.
+
+=back
+
+=head1 FILES
+
+/etc/hostuuid
+
+=head1 REQUIRES
+
+Perl 5.8, UUID::Tiny
+
+=head1 SEE ALSO
+
+perl(1)
+
+=head1 AUTHOR
+
+Richard Hartmann, richih.mailinglist@gmail.com
+
+=cut
 
 GetOptions (
             'file|f=s'  => \$file,
+            'force'     => \$force,
             'help|h|?'  => \$print_help,
-            'version|v' => \$print_version,
+            'version'   => \$print_version,
             'create|c'  => \$create_uuid,
             'quiet|q'   => \$quiet,
-            'verify'    => \$verify_uuid,
            ) or print_help(255);
 
 sub print_version() {
@@ -62,13 +126,12 @@ sub print_help {
 		print <<HELP;
 Help for $program:
 
-  -h, -?, --help : print this help
-  -v, --version  : print version
   -f, --file     : file to read from/write to. Defaults to /etc/hostuuid
+  --force        : force creation of new UUID
   -c, --create   : create & save UUID
   -q, --quiet    : Don't print anything
-  --verify       : verify if there is a valid UUID in file
-                   Does not print, only exits with zero/non-zero return code
+  -h, -?, --help : print this help
+  --version      : print version
 HELP
 	}	
 	exit $exit_code;
@@ -76,7 +139,7 @@ HELP
 
 sub create_uuid() {
 	my $uuid = find_hostuuid();
-	if ($uuid) {
+	if ($uuid && !$force) {
 		print STDERR "$program: Found UUID '$uuid' in '$file'. Aborting!\n" unless $quiet;
 		exit 101;
 	} else {
@@ -96,7 +159,7 @@ sub find_hostuuid() {
 #	if ($create_uuid) {return 0 unless -e $file;}
 	return 0 unless ((-e $file && $create_uuid) || !$create_uuid);
 	open (F, "<", "$file") or do {
-		die "$program: Could not open file: '$file'\: $!\n" unless $verify_uuid || $quiet;
+		die "$program: Could not open file: '$file'\: $!\n" unless $quiet;
 		exit 2;
 	};
 	while (<F>) {
@@ -110,10 +173,10 @@ sub find_hostuuid() {
 sub main() {
 	unless (-t STDIN) {
 		if (<STDIN> =~ /^([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
-			print "$1 is a valid UUID\n" unless $verify_uuid || $quiet;
+			print "$1 is a valid UUID\n" unless $quiet;
 			exit;
 		} else {
-			print "NOT a valid UUID\n" unless $verify_uuid || $quiet;
+			print "NOT a valid UUID\n" unless $quiet;
 			exit 105;
 		}
 	}
@@ -124,10 +187,10 @@ sub main() {
 
 	my $uuid = find_hostuuid();
 	if ($uuid) {
-		print "$uuid\n" unless $verify_uuid || $quiet;
+		print "$uuid\n" unless $quiet;
 		exit 0;
 	} else {
-		print STDERR "$program: Could not find UUID in '$file'\n" unless $verify_uuid || $quiet;
+		print STDERR "$program: Could not find UUID in '$file'\n" unless $quiet;
 		exit 100;
 	}
 }
