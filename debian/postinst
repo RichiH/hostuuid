@@ -1,29 +1,46 @@
 #!/bin/sh -e
+set -x
 
-. /usr/share/debconf/confmodule
-
+action="$1"
+oldversion="$2"
 uuid_file='/etc/hostuuid'
 create_uuid=''
 
+export PATH=$PATH:/sbin:/usr/sbin:/bin:/usr/bin
+
+. /usr/share/debconf/confmodule
+
+
 test_uuid_file() {
-	echo $RET | /usr/bin/hostuuid --verify
+	hostuuid --quiet
 }
 
-if test_uuid_file; then
-	exit 0
-else
-	db_input medium hostuuid/enter_uuid || true
-	db_go
-	db_get hostuuid/enter_uuid
-	# if $RET is empty, generate a UUID
-	if [ -z "$RET" ]; then
-		/usr/bin/hostuuid --create --quiet
+test_uuid() {
+	echo $RET | hostuuid --quiet
+}
+
+
+if [ "$1" = "configure" ] || [ "$1" = "reconfigure" ]; then
+#	if test_uuid_file; then
+	if [ -e /etc/hostuuid ]; then
+		exit 0
 	else
-		if test_uuid_file; then
-			exit 0
+#		db_input medium hostuuid/enter_uuid || true
+#		db_set hostuuid/enter_uuid ""
+		db_input high hostuuid/enter_uuid || true
+		db_go
+		db_get hostuuid/enter_uuid
+		# if $RET is empty, generate a UUID
+		if [ -z "$RET" ]; then
+			hostuuid --create --quiet
+			echo hi > /dev/null
 		else
-			db_fset hostuuid/faulty_uuid seen false
-			db_input critical hostuuid/faulty_uuid
+			if test_uuid_file; then
+				exit 0
+			else
+				db_fset hostuuid/faulty_uuid seen false
+				db_input critical hostuuid/faulty_uuid
+			fi
 		fi
 	fi
 fi

@@ -25,6 +25,7 @@ install: build
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
+	dh_installdebconf
 
 	# Add here commands to install the package into debian/hostuuid.
 #	cp ./hostuuid            debian/hostuuid/usr/bin/
@@ -50,6 +51,7 @@ binary-indep: build install
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
+#	dh_installdebconf
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install
