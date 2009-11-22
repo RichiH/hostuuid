@@ -38,6 +38,7 @@ my $print_version;
 my $print_help;
 my $create_uuid = 0;
 my $quiet;
+my $no_stdin=0;
 
 =head1 SYNOPSIS
 
@@ -102,10 +103,11 @@ Richard Hartmann, richih.mailinglist@gmail.com
 GetOptions (
             'file|f=s'  => \$file,
             'force'     => \$force,
-            'help|h|?'  => \$print_help,
-            'version'   => \$print_version,
             'create|c'  => \$create_uuid,
             'quiet|q'   => \$quiet,
+            'nostdin'   => \$no_stdin,
+            'help|h|?'  => \$print_help,
+            'version'   => \$print_version,
            ) or print_help(255);
 
 sub print_version() {
@@ -163,7 +165,7 @@ sub find_hostuuid() {
 		exit 2;
 	};
 	while (<F>) {
-		if (/^([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
+		if (/^([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})$/i) {
 			close (F);
 			return $1;
 		}
@@ -171,8 +173,8 @@ sub find_hostuuid() {
 }
 
 sub main() {
-	unless (-t STDIN) {
-		if (<STDIN> =~ /^([0-9a-z]{8}-([0-9a-z]{4}-){3}[0-9a-z]{12})/i) {
+	unless ($no_stdin || -t STDIN) { ## we need to test for $no_stdin cause debconf makes us hang, otherwise
+		if (<STDIN> =~ /^([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})$/i) {
 			print "$1 is a valid UUID\n" unless $quiet;
 			exit;
 		} else {
@@ -180,7 +182,6 @@ sub main() {
 			exit 105;
 		}
 	}
-	chomp $file;
 	print_version() if $print_version;
 	print_help(0)   if $print_help;
 	create_uuid()   if $create_uuid;
