@@ -21,8 +21,8 @@ test_uuid() {
 
 
 if [ "$1" = "configure" ] || [ "$1" = "reconfigure" ]; then
-#	if test_uuid_file; then
-	if [ -e /etc/hostuuid ]; then
+	if test_uuid_file; then
+#	if [ -e /etc/hostuuid ]; then
 		exit 0
 	else
 #		db_input medium hostuuid/enter_uuid || true
