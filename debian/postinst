@@ -33,7 +33,7 @@ if [ "$1" = "configure" ] || [ "$1" = "reconfigure" ]; then
 		# if $RET is empty, generate a UUID
 		if [ -z "$RET" ]; then
 			echo $RET
-			hostuuid --create --quiet
+			hostuuid --create --quiet --nostdin
 		else
 			if test_uuid_file; then
 				exit 0

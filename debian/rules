@@ -20,6 +20,9 @@ clean:
 	dh_clean
 	rm -rf $(CURDIR)/debian/hostuuid/
 
+	rm -f debian/manpages
+	rm -rf debian/pod2man
+
 install: build
 	dh_testdir
 	dh_testroot
@@ -51,7 +54,10 @@ binary-indep: build install
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
-#	dh_installdebconf
+	rm -f debian/manpages
+	test -d debian/pod2man || mkdir debian/pod2man
+	pod2man --section=1 hostuuid debian/pod2man/hostuuid.1
+	echo debian/pod2man/hostuuid.1 >> debian/manpages
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install
