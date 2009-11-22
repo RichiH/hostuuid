@@ -72,6 +72,11 @@ Create a new UUID.
 Don't print anything.
 B<hostuuid> will still exit with proper return codes for you to script with.
 
+=item B<--nostdin>
+
+Do not listen on STDIN.
+Needed to work around a bug in debconf.
+
 =item B<-h|-?|--help>
 
 Print help.
@@ -132,6 +137,7 @@ Help for $program:
   --force        : force creation of new UUID
   -c, --create   : create & save UUID
   -q, --quiet    : Don't print anything
+  --nostdin      : Do not listen on STDIN
   -h, -?, --help : print this help
   --version      : print version
 HELP
