@@ -16,12 +16,12 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp
-
+	
 	dh_clean
 	rm -rf $(CURDIR)/debian/hostuuid/
-
+	
 	rm -f debian/manpages
-	rm -rf debian/pod2man
+#	rm -rf debian/pod2man
 
 install: build
 	dh_testdir
@@ -29,6 +29,10 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	dh_installdebconf
+	rm -f debian/manpages
+	pod2man --section=1 hostuuid debian/manpages/hostuuid.1
+#	rm -f debian/manpages
+#	pod2man --section=1 hostuuid > debian/manpages
 
 	# Add here commands to install the package into debian/hostuuid.
 #	cp ./hostuuid            debian/hostuuid/usr/bin/
@@ -38,13 +42,13 @@ install: build
 binary-arch: build install
 # We have nothing to do by default.
 
+#	rm -f debian/manpages
+#	test -d debian/pod2man || mkdir debian/pod2man
+#	pod2man --section=1 hostuuid debian/pod2man/hostuuid.1
+#	echo debian/pod2man/hostuuid.1 >> debian/manpages
+#	
 # Build architecture-independent files here.
 binary-indep: build install
-	rm -f debian/manpages
-	test -d debian/pod2man || mkdir debian/pod2man
-	pod2man --section=1 hostuuid debian/pod2man/hostuuid.1
-	echo debian/pod2man/hostuuid.1 >> debian/manpages
-	
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs
