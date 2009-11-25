@@ -18,7 +18,7 @@
 
 =head1 NAME
 
-B<hostuuid> - program to create, display, check /etc/hostuuid
+hostuuid - program to create, display, check /etc/hostuuid
 
 =cut
 
@@ -29,7 +29,8 @@ use UUID::Tiny;
 use Getopt::Long qw(:config no_ignore_case bundling);
 use File::Basename;
 
-my $version = '1.2';
+my $VERSION;
+$VERSION = '1.2';
 my $program = basename($0);
 
 my $file = '/etc/hostuuid';
@@ -118,7 +119,7 @@ GetOptions (
 sub print_version() {
 	unless ($quiet) {
 		print <<VERSION;
-$program: version $version
+$program: version $VERSION
 
 This program is released under GPLv3
 Written by Richard Hartmann for Debian and Grml
