@@ -7,6 +7,8 @@ WriteMakefile(
     AUTHOR              => q{Richard Hartmann <richih.mailinglist@gmail.com>},
     VERSION_FROM        => 'hostuuid',
     ABSTRACT_FROM       => 'hostuuid',
+    INST_BIN            => '/usr/bin',
+    INST_MAN1DIR        => '/usr/share/man/man1',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'gpl')
       : ()),
