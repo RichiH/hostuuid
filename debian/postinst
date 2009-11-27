@@ -1,5 +1,5 @@
 #!/bin/sh
-#set -e
+set -e
 set -x
 
 action="$1"
@@ -17,7 +17,7 @@ test_uuid_file() {
 }
 
 test_uuid() {
-	echo $RET | hostuuid --quiet --nostdin
+	echo -n $RET | hostuuid --quiet
 }
 
 
@@ -25,8 +25,8 @@ if [ "$1" = "configure" ] || [ "$1" = "reconfigure" ]; then
 	if test_uuid_file; then
 		exit 0
 	else
-#		db_input medium hostuuid/enter_uuid || true
-#		db_set hostuuid/enter_uuid ""
+		# this is set to high as _if_ someone installs this package, the
+		# question is vital
 		db_input high hostuuid/enter_uuid || true
 		db_go
 		db_get hostuuid/enter_uuid
@@ -35,7 +35,8 @@ if [ "$1" = "configure" ] || [ "$1" = "reconfigure" ]; then
 			echo $RET
 			hostuuid --create --quiet --nostdin
 		else
-			if test_uuid_file; then
+			if test_uuid; then
+				hostuuid --create --input $RET
 				exit 0
 			else
 				db_fset hostuuid/faulty_uuid seen false
