@@ -198,6 +198,7 @@ sub main() {
 		my $uuid = check_uuid(<STDIN>);
 		if ($uuid) {
 			print "$uuid is a valid UUID\n" unless $quiet;
+			exit 0;
 		} else {
 			print "NOT a valid UUID\n" unless $quiet;
 			exit 105;
