@@ -76,6 +76,11 @@ Create a new UUID.
 Don't print anything.
 B<hostuuid> will still exit with proper return codes for you to script with.
 
+=item B<--input>
+
+Save this UUID to I<filename>.
+Defaults to /etc/hostuuid
+
 =item B<--nostdin>
 
 Do not listen on STDIN.
@@ -142,6 +147,7 @@ Help for $program:
   --force        : force creation of new UUID
   -c, --create   : create & save UUID
   -q, --quiet    : Don't print anything
+  --input        : Save UUID to file. Defaults to /etc/hostuuid
   --nostdin      : Do not listen on STDIN
   -h, -?, --help : print this help
   --version      : print version
