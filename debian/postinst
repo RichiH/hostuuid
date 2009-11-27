@@ -33,13 +33,15 @@ if [ "$1" = "configure" ] || [ "$1" = "reconfigure" ]; then
 		# if $RET is empty, generate a UUID
 		if [ -z "$RET" ]; then
 			echo $RET
-			hostuuid --create --quiet --nostdin
+#			hostuuid --create --quiet --nostdin
+			hostuuid --create --nostdin
 		else
 			if test_uuid; then
-				hostuuid --create --input $RET
+#				hostuuid --create --quiet --nostdin --input $RET
+				hostuuid --create --nostdin --input $RET
 				exit 0
 			else
-				db_fset hostuuid/faulty_uuid seen false
+#				db_fset hostuuid/faulty_uuid seen false
 				db_input critical hostuuid/faulty_uuid
 			fi
 		fi
