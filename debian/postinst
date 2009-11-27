@@ -41,8 +41,9 @@ if [ "$1" = "configure" ] || [ "$1" = "reconfigure" ]; then
 				hostuuid --create --nostdin --input $RET
 				exit 0
 			else
-#				db_fset hostuuid/faulty_uuid seen false
-				db_input critical hostuuid/faulty_uuid
+				db_fset hostuuid/faulty_uuid seen false
+				db_input critical hostuuid/faulty_uuid || true
+				db_go
 			fi
 		fi
 	fi
