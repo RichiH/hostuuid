@@ -37,6 +37,7 @@ my $file = '/etc/hostuuid';
 my $force;
 my $print_version;
 my $print_help;
+my $input;
 my $create_uuid = 0;
 my $quiet;
 my $no_stdin=0;
@@ -112,6 +113,7 @@ GetOptions (
             'file|f=s'  => \$file,
             'force'     => \$force,
             'create|c'  => \$create_uuid,
+            'input=s'   => \$input,
             'quiet|q'   => \$quiet,
             'nostdin'   => \$no_stdin,
             'help|h|?'  => \$print_help,
@@ -154,53 +156,65 @@ sub create_uuid() {
 		print STDERR "$program: Found UUID '$uuid' in '$file'. Aborting!\n" unless $quiet;
 		exit 101;
 	} else {
-		open (F, ">", "$file") or do {
-			die "$program: Could not open file: '$file'\: $!\n" unless $quiet;
-			exit 2;
-		};
-		$uuid = create_UUID_as_string(UUID_V4);
-		print "$program\: Stored UUID '$uuid' in file '$file'\n" unless $quiet;
-		print F "$uuid\n";
-		close (F);
-		exit 0;
+		save_uuid(create_UUID_as_string(UUID_V4));
 	}
 }
 
 sub find_hostuuid() {
-#	if ($create_uuid) {return 0 unless -e $file;}
 	return 0 unless ((-e $file && $create_uuid) || !$create_uuid);
 	open (F, "<", "$file") or do {
 		die "$program: Could not open file: '$file'\: $!\n" unless $quiet;
 		exit 2;
 	};
-	while (<F>) {
-		if (/^([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})$/i) {
-			close (F);
-			return $1;
-		}
+	my $uuid = check_uuid(<F>);
+	close (F);
+	return $uuid;
+}
+
+sub check_uuid {
+	my ($string) = @_;
+	return $1 if ($string =~ /^([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})$/i);
+	return undef;
+}
+
+sub save_uuid {
+	my ($uuid) = @_;
+	unless (check_uuid($uuid)) {
+		print "$uuid is NOT a valid UUID\n" unless $quiet;
+		exit 3;
 	}
+	open (F, ">", "$file") or do {
+		die "$program: Could not open file: '$file'\: $!\n" unless $quiet;
+		exit 5;
+	};
+	print "$program\: Stored UUID '$uuid' in '$file'\n" unless $quiet;
+	print F "$uuid\n";
+	close (F);
+	exit 0;
 }
 
 sub main() {
 	unless ($no_stdin || -t STDIN) { ## we need to test for $no_stdin cause debconf makes us hang, otherwise
-		if (<STDIN> =~ /^([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})$/i) {
-			print "$1 is a valid UUID\n" unless $quiet;
-			exit;
+		my $uuid = check_uuid(<STDIN>);
+		if ($uuid) {
+			print "$uuid is a valid UUID\n" unless $quiet;
+			exit 4;
 		} else {
 			print "NOT a valid UUID\n" unless $quiet;
 			exit 105;
 		}
 	}
-	print_version() if $print_version;
-	print_help(0)   if $print_help;
-	create_uuid()   if $create_uuid;
+	print_version()   if $print_version;
+	print_help(0)     if $print_help;
+	save_uuid($input) if $input;
+	create_uuid()     if $create_uuid;
 
 	my $uuid = find_hostuuid();
 	if ($uuid) {
 		print "$uuid\n" unless $quiet;
 		exit 0;
 	} else {
-		print STDERR "$program: Could not find UUID in '$file'\n" unless $quiet;
+		print STDERR "$program: Could not find valid UUID in '$file'\n" unless $quiet;
 		exit 100;
 	}
 }
