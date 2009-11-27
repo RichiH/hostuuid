@@ -44,7 +44,9 @@ my $no_stdin=0;
 =head1 SYNOPSIS
 
 B<hostuuid> [-f I<file>]
+
 B<hostuuid> -c [--force] [-f I<file>]
+
 echo 4f1cc27c-6c7b-4419-9db6-5b2f6a600b37 | B<hostuuid>
 
 =head1 DESCRIPTION
