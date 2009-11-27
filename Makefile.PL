@@ -7,9 +7,9 @@ WriteMakefile(
     AUTHOR              => q{Richard Hartmann <richih.mailinglist@gmail.com>},
     VERSION_FROM        => 'hostuuid',
     ABSTRACT_FROM       => 'hostuuid',
-    INST_BIN            => '.',
+    INST_BIN            => 'bin',
     INSTALLBIN          => '/usr/bin',
-    INST_MAN1DIR        => '.',
+    INST_MAN1DIR        => 'man',
     INSTALLMAN1DIR      => '/usr/share/man/man1/',
     EXE_FILES           => [qw(hostuuid)],
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
