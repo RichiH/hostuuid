@@ -2,11 +2,11 @@ Source: hostuuid
 Section: admin
 Priority: optional
 Maintainer: Richard Hartmann <richih.mailinglist@gmail.com>
-Build-Depends: cdbs (>= 0.4.4), debhelper (>= 7.0.0), perl (>= 5.8.0-7), po-debconf
+Build-Depends: cdbs (>= 0.4.4), debhelper (>= 7), perl (>= 5.8.0-7), po-debconf
 Standards-Version: 3.8.3
 
 Package: hostuuid
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, ${perl:Depends}, libuuid-tiny-perl
 Description: A program to assign & print a UUID per host
  Create, manage and display a UUID which is stored into
