@@ -4,6 +4,8 @@ Priority: optional
 Maintainer: Richard Hartmann <richih.mailinglist@gmail.com>
 Build-Depends: cdbs (>= 0.4.4), debhelper (>= 7), perl (>= 5.8.0-7), po-debconf
 Standards-Version: 3.8.3
+Vcs-Browser: http://repo.or.cz/r/hostuuid.git
+Vcs-Git: git://repo.or.cz/hostuuid.git
 
 Package: hostuuid
 Architecture: any
