@@ -1,3 +1,9 @@
+hostuuid (1.2-1) unstable; urgency=low
+
+  * Changed architecture from any to all
+
+ -- Richard Hartmann <richih.mailinglist@gmail.com>  Fri, 11 Dec 2009 02:31:00 +0100
+
 hostuuid (1.2) unstable; urgency=low
 
   * Upgraded to 1.2

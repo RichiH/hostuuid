@@ -8,7 +8,7 @@ Vcs-Browser: http://repo.or.cz/r/hostuuid.git
 Vcs-Git: git://repo.or.cz/hostuuid.git
 
 Package: hostuuid
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends}, libuuid-tiny-perl
 Description: A program to assign & print a UUID per host
  Create, manage and display a UUID which is stored into
