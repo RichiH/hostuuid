@@ -18,7 +18,7 @@
 
 =head1 NAME
 
-hostuuid - program to create, display, check /etc/hostuuid
+hostuuid - create, display, and check /etc/hostuuid
 
 =cut
 
