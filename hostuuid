@@ -169,7 +169,7 @@ sub create_uuid() {
 sub find_hostuuid() {
 	return 0 unless ((-e $file && $create_uuid) || !$create_uuid);
 	open (F, "<", "$file") or do {
-		die "$program: Could not open file: '$file'\: $!\n" unless $quiet;
+		print STDERR "$program: Could not open file: '$file'\: $!\n" unless $quiet;
 		exit 2;
 	};
 	my $uuid = check_uuid(<F>);
@@ -190,7 +190,7 @@ sub save_uuid {
 		exit 3;
 	}
 	open (F, ">", "$file") or do {
-		die "$program: Could not open file: '$file'\: $!\n" unless $quiet;
+		print STDERR "$program: Could not open file: '$file'\: $!\n" unless $quiet;
 		exit 5;
 	};
 	print "$program\: Stored UUID '$uuid' in '$file'\n" unless $quiet;
